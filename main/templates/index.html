@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Research</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Deep Research</h1>
+            <p>Enter a topic to perform comprehensive research using deep research capabilities</p>
+        </header>
+        
+        <main>
+            <form action="/search" method="post" id="research-form">
+                <div class="form-group">
+                    <label for="query">Research Topic:</label>
+                    <input type="text" id="query" name="query" placeholder="Enter a topic to research..." required>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" id="submit-btn">Research</button>
+                </div>
+            </form>
+            
+            <div id="loading" class="hidden">
+                <div class="spinner"></div>
+                <p>Researching... This might take a minute or two.</p>
+            </div>
+
+            <div class="history-link">
+                <a href="/history">View Search History</a>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Lets do research!</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.getElementById('research-form').addEventListener('submit', function() {
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('submit-btn').disabled = true;
+        });
+    </script>
+</body>
+</html> 

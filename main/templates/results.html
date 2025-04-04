@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Results - {{ query }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Add Markdown rendering library -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Research Results</h1>
+            <p>Topic: <strong>{{ query }}</strong></p>
+        </header>
+        
+        <main class="results-container">
+            {% if results %}
+                <div class="research-summary">
+                    <h2>Research Summary</h2>
+                    {% if results.get('summary') %}
+                        <div class="summary-content">
+                            {{ results.get('summary')|safe }}
+                        </div>
+                    {% elif results.get('answer') %}
+                        <div class="summary-content">
+                            {{ results.get('answer')|safe }}
+                        </div>
+                    {% elif results.get('research') %}
+                        <div class="summary-content">
+                            {{ results.get('research')|safe }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if results.get('keyFindings') %}
+                    <div class="key-findings">
+                        <h3>Key Findings</h3>
+                        <ul>
+                            {% for finding in results.get('keyFindings', []) %}
+                                <li>{{ finding|safe }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                
+                {% if results.get('content') %}
+                    <div class="detailed-content">
+                        <h2>Detailed Research</h2>
+                        <div class="content-text markdown-content" id="markdown-content">
+                            <!-- Content will be rendered by JavaScript -->
+                        </div>
+                        <div class="content-text markdown-content-raw" style="display: none;">
+                            {{ results.get('content')|safe }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if results.get('research') and not results.get('content') and not results.get('summary') %}
+                    <div class="detailed-content">
+                        <h2>Detailed Research</h2>
+                        <div class="content-text">
+                            {{ results.get('research')|safe }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if results.get('sources') %}
+                    <div class="sources">
+                        <h2>Sources</h2>
+                        <ul class="source-list">
+                            {% for source in results.get('sources', []) %}
+                                <li>
+                                    {% if source is mapping %}
+                                        <a href="{{ source.get('url', '#') }}" target="_blank">
+                                            {{ source.get('title') or source.get('name') or source.get('url', 'Unknown Source') }}
+                                        </a>
+                                        {% if source.get('relevance') %}
+                                            <span class="relevance">Relevance: {{ source.relevance }}</span>
+                                        {% endif %}
+                                        {% if source.get('content') %}
+                                            <div class="source-content">
+                                                {{ source.get('content')|truncate(300)|safe }}
+                                                <a href="{{ source.get('url', '#') }}" target="_blank" class="read-more">Read more</a>
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <span>{{ source }}</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="no-results">
+                    <p>No research results found. Please try another query.</p>
+                </div>
+            {% endif %}
+            
+            <div class="back-link">
+                <a href="/">Search Another Topic</a>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Lets do research!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Render markdown content if available
+        document.addEventListener('DOMContentLoaded', function() {
+            const markdownContentRaw = document.querySelector('.markdown-content-raw');
+            const markdownContent = document.querySelector('#markdown-content');
+            
+            if (markdownContentRaw && markdownContent) {
+                const rawText = markdownContentRaw.textContent || markdownContentRaw.innerText;
+                
+                // Use the marked library to convert markdown to HTML
+                markdownContent.innerHTML = marked.parse(rawText);
+                
+                // Add proper styling for tables if they exist
+                const tables = markdownContent.querySelectorAll('table');
+                tables.forEach(table => {
+                    table.classList.add('markdown-table');
+                    table.style.borderCollapse = 'collapse';
+                    table.style.width = '100%';
+                    table.style.marginBottom = '1rem';
+                    
+                    const cells = table.querySelectorAll('th, td');
+                    cells.forEach(cell => {
+                        cell.style.border = '1px solid #ddd';
+                        cell.style.padding = '8px';
+                        cell.style.textAlign = 'left';
+                    });
+                    
+                    const headers = table.querySelectorAll('th');
+                    headers.forEach(header => {
+                        header.style.backgroundColor = '#f2f2f2';
+                        header.style.color = '#333';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

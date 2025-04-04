@@ -1,0 +1,2 @@
+# Deep-Search
+ A powerful web application for deep research and data analysis. This tool provides an intuitive interface for conducting research, managing search queries, and tracking search history. Built with Flask and modern web technologies, it offers efficient data organization and a user-friendly experience for researchers and analysts. Features include real-time search capabilities, history tracking, and organized data presentation.

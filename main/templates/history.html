@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Search History</h1>
+            <p>View your past research queries and results</p>
+        </header>
+        
+        <main class="history-container">
+            {% if searches %}
+                <div class="search-list">
+                    {% for search in searches %}
+                        <div class="search-item">
+                            <h3>{{ search.query }}</h3>
+                            <p class="timestamp">Searched on: {{ search.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                            <div class="search-summary">
+                                {{ search.summary|safe }}
+                            </div>
+                            <a href="{{ url_for('view_search', search_id=search.id) }}" class="view-link">View Full Results</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-results">
+                    <p>No search history found. Start researching to see your history here!</p>
+                </div>
+            {% endif %}
+            
+            <div class="back-link">
+                <a href="/">New Search</a>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Research History</p>
+        </footer>
+    </div>
+</body>
+</html> 

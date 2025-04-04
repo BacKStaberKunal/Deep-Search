@@ -1,0 +1,4 @@
+flask==2.3.3
+firecrawl-py
+python-dotenv
+flask-sqlalchemy==3.1.1 
